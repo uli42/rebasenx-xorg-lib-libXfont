@@ -52,6 +52,9 @@ THE SOFTWARE.
 #include FT_XFREE86_H
 #include FT_BBOX_H
 #include FT_INTERNAL_TRUETYPE_TYPES_H
+#ifdef USE_INTERNAL_FREETYPE
+# include "ttobjs.h"
+#endif
 
 /*
  *  If you want to use FT_Outline_Get_CBox instead of 
@@ -907,8 +910,14 @@ FreeTypeRasteriseGlyph(unsigned idx, int flags, CharInfoPtr tgp,
 	    /* If sbit is available, we don't use very lazy method. */
 	    /* See TT_Load_Glyph */
 	    if( FT_IS_SFNT( face->face ) ) {
+#ifdef USE_INTERNAL_FREETYPE
+		TT_Size tt_size = (TT_Size)instance->size;
+		if( !( !(instance->load_flags & FT_LOAD_NO_BITMAP)
+		       && tt_size->strike_index != 0xFFFFU ) )
+#else
 		if((instance->load_flags & FT_LOAD_NO_BITMAP)
 		   || (face->face->face_flags & FT_FACE_FLAG_FIXED_SIZES) == 0)
+#endif
 		    correct=1;
 	    }
 	}
