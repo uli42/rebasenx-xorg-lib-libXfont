@@ -25,6 +25,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+/* $XdotOrg$ */
 
 /* $XFree86: xc/lib/font/FreeType/ftfuncs.c,v 1.43 2004/02/07 04:37:18 dawes Exp $ */
 
@@ -51,7 +52,7 @@ THE SOFTWARE.
 #include FT_XFREE86_H
 #include FT_BBOX_H
 #include FT_INTERNAL_TRUETYPE_TYPES_H
-#include "ttobjs.h"
+
 /*
  *  If you want to use FT_Outline_Get_CBox instead of 
  *  FT_Outline_Get_BBox, define here.
@@ -906,9 +907,9 @@ FreeTypeRasteriseGlyph(unsigned idx, int flags, CharInfoPtr tgp,
 	    /* If sbit is available, we don't use very lazy method. */
 	    /* See TT_Load_Glyph */
 	    if( FT_IS_SFNT( face->face ) ) {
-		TT_Size tt_size = (TT_Size)instance->size;
-		if( !( !(instance->load_flags & FT_LOAD_NO_BITMAP) 
-		       && tt_size->strike_index != 0xFFFFU ) ) correct=1;
+		if((instance->load_flags & FT_LOAD_NO_BITMAP)
+		   || (face->face->face_flags & FT_FACE_FLAG_FIXED_SIZES) == 0)
+		    correct=1;
 	    }
 	}
     }
