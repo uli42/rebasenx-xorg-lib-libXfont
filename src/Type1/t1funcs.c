@@ -123,10 +123,14 @@ from The Open Group.
 #else
 #include "Xmd.h"
 #include "Xdefs.h"
-#include "xf86_ansic.h"
 #endif
 
 #include "os.h"
+
+#ifdef FONTMODULE
+#include "xf86_ansic.h"
+#endif
+
 #include "fntfilst.h"
 #include "fontutil.h"
 #include "FSproto.h"

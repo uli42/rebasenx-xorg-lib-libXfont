@@ -1,3 +1,4 @@
+/* $XdotOrg: xc/lib/font/fc/fserve.c,v 1.1.4.4.2.1 2004/03/04 17:47:11 eich Exp $ */
 /* $Xorg: fserve.c,v 1.4 2001/02/09 02:04:02 xorgcvs Exp $ */
 /*
 
@@ -24,7 +25,7 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/fc/fserve.c,v 3.25 2003/11/20 18:16:34 dawes Exp $ */
+/* $XFree86: xc/lib/font/fc/fserve.c,v 3.26tsi Exp $ */
 
 /*
  * Copyright 1990 Network Computing Devices
@@ -1052,44 +1053,27 @@ fs_read_extent_info(FontPathElementPtr fpe, FSBlockDataPtr blockrec)
 		ci->metrics.descent = FONT_MAX_DESCENT(fi);
 		ci->metrics.characterWidth = FONT_MAX_WIDTH(fi);
 		ci->metrics.attributes = ii->metrics.attributes;
-		/* Bounds check. */
-		if (ci->metrics.ascent > fi->maxbounds.ascent)
-		{
-		    ErrorF("fserve: warning: %s %s ascent (%d) "
-			   "> maxascent (%d)\n",
-			   fpe->name, fsd->name,
-			   ci->metrics.ascent, fi->maxbounds.ascent);
-		    ci->metrics.ascent = fi->maxbounds.ascent;
-		}
-		if (ci->metrics.descent > fi->maxbounds.descent)
-		{
-		    ErrorF("fserve: warning: %s %s descent (%d) "
-			   "> maxdescent (%d)\n",
-			   fpe->name, fsd->name,
-			   ci->metrics.descent, fi->maxbounds.descent);
-		    ci->metrics.descent = fi->maxbounds.descent;
-		}
 	    }
 	    else
 	    {
 		ci->metrics = ii->metrics;
-		/* Bounds check. */
-		if (ci->metrics.ascent > fi->maxbounds.ascent)
-		{
-		    ErrorF("fserve: warning: %s %s ascent (%d) "
-			   "> maxascent (%d)\n",
-			   fpe->name, fsd->name,
-			   ci->metrics.ascent, fi->maxbounds.ascent);
-		    ci->metrics.ascent = fi->maxbounds.ascent;
-		}
-		if (ci->metrics.descent > fi->maxbounds.descent)
-		{
-		    ErrorF("fserve: warning: %s %s descent (%d) "
-			   "> maxdescent (%d)\n",
-			   fpe->name, fsd->name,
-			   ci->metrics.descent, fi->maxbounds.descent);
-		    ci->metrics.descent = fi->maxbounds.descent;
-		}
+	    }
+	    /* Bounds check. */
+	    if (ci->metrics.ascent > fi->maxbounds.ascent)
+	    {
+		ErrorF("fserve: warning: %s %s ascent (%d) "
+		       "> maxascent (%d)\n",
+		       fpe->name, fsd->name,
+		       ci->metrics.ascent, fi->maxbounds.ascent);
+		ci->metrics.ascent = fi->maxbounds.ascent;
+	    }
+	    if (ci->metrics.descent > fi->maxbounds.descent)
+	    {
+		ErrorF("fserve: warning: %s %s descent (%d) "
+		       "> maxdescent (%d)\n",
+		       fpe->name, fsd->name,
+		       ci->metrics.descent, fi->maxbounds.descent);
+		ci->metrics.descent = fi->maxbounds.descent;
 	    }
 	}
     }
@@ -2231,7 +2215,7 @@ _fs_load_glyphs(pointer client, FontPtr pfont, Bool range_flag,
 	xfree(ranges);
 
 	/* Now try to reopen the font. */
-	return fs_send_open_font(client, (FontPathElementPtr)0,
+	return fs_send_open_font(client, pfont->fpe,
 				 (Mask)FontReopen, (char *)0, 0,
 				 (fsBitmapFormat)0, (fsBitmapFormatMask)0,
 				 (XID)0, &pfont);

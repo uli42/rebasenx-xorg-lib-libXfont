@@ -1,3 +1,4 @@
+/* $XdotOrg: xc/lib/font/fontfile/fontdir.c,v 1.1.4.3.4.1 2004/03/04 17:47:11 eich Exp $ */
 /* $Xorg: fontdir.c,v 1.4 2001/02/09 02:04:03 xorgcvs Exp $ */
 
 /*
@@ -629,6 +630,9 @@ FontFileAddFontFile (FontDirectoryPtr dir, char *fontName, char *fileName)
     FontScalableExtraPtr    extra;
     FontEntryPtr	    bitmap = 0, scalable;
     Bool		    isscale;
+#ifdef FONTDIRATTRIB
+    Bool		    scalable_xlfd;
+#endif
 
     renderer = FontFileMatchRenderer (fileName);
     if (!renderer)
@@ -656,8 +660,15 @@ FontFileAddFontFile (FontDirectoryPtr dir, char *fontName, char *fileName)
 	      !(vals.values_supplied & ENHANCEMENT_SPECIFY_MASK);
 #ifdef FONTDIRATTRIB
 #define UNSCALED_ATTRIB "unscaled"
-    /* For scalable fonts, check if the "unscaled" attribute is present */
-    if (isscale && dir->attributes && dir->attributes[0] == ':') {
+    scalable_xlfd = (isscale &&
+		(((vals.values_supplied & PIXELSIZE_MASK) == 0) ||
+		 ((vals.values_supplied & POINTSIZE_MASK) == 0)));
+    /*
+     * For scalable fonts without a scalable XFLD, check if the "unscaled"
+     * attribute is present.
+     */
+    if (isscale && !scalable_xlfd &&
+	    dir->attributes && dir->attributes[0] == ':') {
 	char *ptr1 = dir->attributes + 1;
 	char *ptr2;
 	int length;

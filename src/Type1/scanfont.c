@@ -1,3 +1,4 @@
+/* $XdotOrg: xc/lib/font/Type1/scanfont.c,v 1.1.4.3.4.1 2004/03/04 17:47:04 eich Exp $ */
 /* $Xorg: scanfont.c,v 1.3 2000/08/17 19:46:32 cpqbld Exp $ */
 /* Copyright International Business Machines,Corp. 1991
  * All Rights Reserved
@@ -1727,8 +1728,9 @@ scan_cidfont(cidfont *CIDFontP, cmapres *CMapP)
         tokenStartP[tokenLength] = '\0';
 
         rc = FindDictValue(CMapP->CMapInfoP);
-        /* we are not going to report errors */
-        rc = SCAN_OK;
+        /* we are not going to report errors except out of memory */
+        if (rc != SCAN_OUT_OF_MEMORY)
+          rc = SCAN_OK;
         break;
       case TOKEN_NAME:
         if (0 == strncmp(tokenStartP,"begincodespacerange",19)) {
@@ -1983,8 +1985,9 @@ scan_cidfont(cidfont *CIDFontP, cmapres *CMapP)
 
          if (CIDWantFontInfo) {
              rc = FindDictValue(CIDFontP->CIDfontInfoP);
-             /* we are not going to report errors */
-             rc = SCAN_OK;
+             /* we are not going to report errors except out of memory */
+             if (rc != SCAN_OUT_OF_MEMORY)
+               rc = SCAN_OK;
              break;
          }
         break;
@@ -2109,8 +2112,10 @@ scan_cidtype1font(psfont *FontP)
               /* same UniqueID.  We would faile on /UniqueID get  */
               /* because we are expecting a int to follow UniqueID*/
               /* If the correct object type does not follow a Name*/
-              /* then we will skip over it without reporting error*/
-              rc = SCAN_OK;
+              /* then we will skip over it without reporting error except */
+              /* out of memory */
+              if (rc != SCAN_OUT_OF_MEMORY)
+                rc = SCAN_OK;
               break;
             }   /* end of reading Private dictionary */
             else
@@ -2122,8 +2127,9 @@ scan_cidtype1font(psfont *FontP)
               else
                 if (WantFontInfo) {
                   rc = FindDictValue(FontP->fontInfoP);
-                  /* we are not going to report errors */
-                  rc = SCAN_OK;
+                  /* we are not going to report errors except out of memory */
+                  if (rc != SCAN_OUT_OF_MEMORY)
+                    rc = SCAN_OK;
                   break;
                 }
         break;
@@ -2298,8 +2304,10 @@ scan_font(psfont *FontP)
               /* same UniqueID.  We would faile on /UniqueID get  */
               /* because we are expecting a int to follow UniqueID*/
               /* If the correct object type does not follow a Name*/
-              /* then we will skip over it without reporting error*/
-              rc = SCAN_OK;
+              /* then we will skip over it without reporting error except */
+              /* when out of memory */
+              if (rc != SCAN_OUT_OF_MEMORY)
+                rc = SCAN_OK;
               break;
             }   /* end of reading Private dictionary */
             else
@@ -2311,8 +2319,9 @@ scan_font(psfont *FontP)
               else
                 if (WantFontInfo) {
                   rc = FindDictValue(FontP->fontInfoP);
-                  /* we are not going to report errors */
-                  rc = SCAN_OK;
+                  /* we are not going to report errors except out of memory */
+                  if (rc != SCAN_OUT_OF_MEMORY)
+                    rc = SCAN_OK;
                   break;
                 }
         break;

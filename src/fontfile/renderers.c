@@ -58,7 +58,7 @@ FontFilePriorityRegisterRenderer (FontRendererPtr renderer, int priority)
     if (rendererGeneration != serverGeneration) {
 	rendererGeneration = serverGeneration;
 	renderers.number = 0;
-	if (!renderers.renderers)
+	if (renderers.renderers)
 	   xfree(renderers.renderers);
 	renderers.renderers = NULL;
     }
