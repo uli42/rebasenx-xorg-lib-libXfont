@@ -94,9 +94,6 @@ ScaleFunc scale[] =
 #endif
 #ifdef	SNFFORMAT
     BitmapScaleBitmaps,
-#endif
-#endif
-#ifdef	SNFFORMAT
     BitmapScaleBitmaps,
 #ifdef X_GZIP_FONT_COMPRESSION
     BitmapScaleBitmaps,
