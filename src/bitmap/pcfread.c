@@ -588,6 +588,11 @@ pcfReadFont(FontPtr pFont, FontFilePtr file,
     pFont->info.lastRow = pcfGetINT16(file, format);
     pFont->info.defaultCh = pcfGetINT16(file, format);
     if (IS_EOF(file)) goto Bail;
+#ifdef NX_MODIFICATION
+    if (pFont->info.firstCol > pFont->info.lastCol ||
+       pFont->info.firstRow > pFont->info.lastRow ||
+       pFont->info.lastCol-pFont->info.firstCol > 255) goto Bail;
+#endif
 
     nencoding = (pFont->info.lastCol - pFont->info.firstCol + 1) *
 	(pFont->info.lastRow - pFont->info.firstRow + 1);
@@ -726,6 +731,11 @@ pcfReadFontInfo(FontInfoPtr pFontInfo, FontFilePtr file)
     pFontInfo->lastRow = pcfGetINT16(file, format);
     pFontInfo->defaultCh = pcfGetINT16(file, format);
     if (IS_EOF(file)) goto Bail;
+#ifdef NX_MODIFICATION
+    if (pFontInfo->firstCol > pFontInfo->lastCol ||
+       pFontInfo->firstRow > pFontInfo->lastRow ||
+       pFontInfo->lastCol-pFontInfo->firstCol > 255) goto Bail;
+#endif
 
     nencoding = (pFontInfo->lastCol - pFontInfo->firstCol + 1) *
 	(pFontInfo->lastRow - pFontInfo->firstRow + 1);

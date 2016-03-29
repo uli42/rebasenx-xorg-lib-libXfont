@@ -37,6 +37,9 @@
 
 #ifndef FONTMODULE
 #include <string.h>
+#ifdef NX_MODIFICATION
+#include <limits.h>
+#endif
 #else
 #include "Xdefs.h"	/* Bool declaration */
 #include "Xmd.h"	/* INT32 declaration */
